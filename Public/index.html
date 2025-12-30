@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVA AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0d0d2b 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated Stars Background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        /* Floating Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+            z-index: 0;
+        }
+        
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+        
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -7s;
+        }
+        
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+            top: 50%;
+            left: 50%;
+            animation-delay: -14s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.9); }
+            75% { transform: translate(20px, 30px) scale(1.05); }
+        }
+        
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Left Panel - AI Avatar */
+        .avatar-panel {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+        }
+        
+        /* AI Full Body Avatar */
+        .ai-avatar-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Holographic Platform - Glowing cyan ellipse */
+        .hologram-platform {
+            width: 200px;
+            height: 25px;
+            background: linear-gradient(90deg, transparent 5%, rgba(6, 182, 212, 0.4) 30%, rgba(6, 182, 212, 0.6) 50%, rgba(6, 182, 212, 0.4) 70%, transparent 95%);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: platformGlow 2s infinite ease-in-out;
+            box-shadow: 
+                0 0 30px rgba(6, 182, 212, 0.6),
+                0 0 60px rgba(6, 182, 212, 0.4),
+                0 0 90px rgba(6, 182, 212, 0.2);
+        }
+        
+        @keyframes platformGlow {
+            0%, 100% { 
+                opacity: 0.8; 
+                box-shadow: 0 0 30px rgba(6, 182, 212, 0.6), 0 0 60px rgba(6, 182, 212, 0.4);
+            }
+            50% { 
+                opacity: 1; 
+                box-shadow: 0 0 40px rgba(6, 182, 212, 0.8), 0 0 80px rgba(6, 182, 212, 0.5);
+            }
+        }
+        
+        /* Hologram Rings */
+        .hologram-ring {
+            position: absolute;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            animation: ringRotate 10s linear infinite;
+        }
+        
+        .ring-1 {
+            width: 320px;
+            height: 320px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-color: rgba(99, 102, 241, 0.2);
+            animation-duration: 15s;
+        }
+        
+        .ring-2 {
+            width: 380px;
+            height: 380px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-color: rgba(6, 182, 212, 0.15);
+            animation-duration: 20s;
+            animation-direction: reverse;
+        }
+        
+        .ring-3 {
+            width: 440px;
+            height: 440px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-color: rgba(236, 72, 153, 0.1);
+            animation-duration: 25s;
+        }
+        
+        @keyframes ringRotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* AI Robot Body */
+        .ai-body {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: bodyFloat 4s ease-in-out infinite;
+        }
+        
+        @keyframes bodyFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        /* AI Head - Smooth rounded design like reference */
+        .ai-head {
+            width: 140px;
+            height: 130px;
+            background: linear-gradient(180deg, #1e293b 0%, #151d2e 50%, #0f172a 100%);
+            border-radius: 70px 70px 60px 60px;
+            position: relative;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.5),
+                inset 0 5px 20px rgba(255, 255, 255, 0.05),
+                inset 0 -15px 30px rgba(0, 0, 0, 0.3);
+            overflow: visible;
+        }
+        
+        /* Smooth highlight on top of head */
+        .ai-head::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 20px;
+            right: 20px;
+            height: 40px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.08), transparent);
+            border-radius: 50px 50px 30px 30px;
+        }
+        
+        /* AI Face Screen - Dark rounded area */
+        .ai-face {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            right: 20px;
+            height: 65px;
+            background: linear-gradient(180deg, #0c1220 0%, #0a0f1a 100%);
+            border-radius: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            box-shadow: 
+                inset 0 2px 10px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(6, 182, 212, 0.1);
+        }
+        
+        /* AI Eyes - Large glowing cyan circles */
+        .ai-eye {
+            width: 32px;
+            height: 32px;
+            background: radial-gradient(circle at 30% 30%, #67e8f9, #06b6d4 40%, #0891b2 100%);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 
+                0 0 25px #06b6d4,
+                0 0 50px rgba(6, 182, 212, 0.6),
+                0 0 80px rgba(6, 182, 212, 0.3),
+                inset 0 -5px 15px rgba(0, 100, 120, 0.5);
+            animation: eyeGlow 2s infinite ease-in-out;
+        }
+        
+        /* Eye highlight/reflection */
+        .ai-eye::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+        
+        @keyframes eyeGlow {
+            0%, 100% { 
+                box-shadow: 0 0 25px #06b6d4, 0 0 50px rgba(6, 182, 212, 0.6), 0 0 80px rgba(6, 182, 212, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 35px #22d3ee, 0 0 70px rgba(6, 182, 212, 0.8), 0 0 100px rgba(6, 182, 212, 0.4);
+            }
+        }
+        
+        /* AI Neck - Shorter and cleaner */
+        .ai-neck {
+            width: 35px;
+            height: 15px;
+            background: linear-gradient(180deg, #1e293b, #2d3a4f);
+            border-radius: 0 0 10px 10px;
+        }
+        
+        /* AI Torso - Smooth rounded body */
+        .ai-torso {
+            width: 180px;
+            height: 200px;
+            background: linear-gradient(180deg, #1e293b 0%, #172033 50%, #0f172a 100%);
+            border-radius: 40px 40px 50px 50px;
+            position: relative;
+            box-shadow: 
+                0 15px 50px rgba(0, 0, 0, 0.5),
+                inset 0 5px 20px rgba(255, 255, 255, 0.03),
+                inset 0 -20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Torso highlight */
+        .ai-torso::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 25px;
+            right: 25px;
+            height: 50px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05), transparent);
+            border-radius: 30px 30px 20px 20px;
+        }
+        
+        /* Chest Core - Glowing cyan circle */
+        .chest-core {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, #0c1220 60%, #0a0f1a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .core-inner {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #67e8f9, #06b6d4 50%, #0891b2 100%);
+            border-radius: 50%;
+            animation: coreGlow 2s infinite;
+            box-shadow: 
+                0 0 30px #06b6d4,
+                0 0 60px rgba(6, 182, 212, 0.6),
+                0 0 90px rgba(6, 182, 212, 0.3),
+                inset 0 -8px 20px rgba(0, 100, 120, 0.4);
+        }
+        
+        @keyframes coreGlow {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 30px #06b6d4, 0 0 60px rgba(6, 182, 212, 0.6), 0 0 90px rgba(6, 182, 212, 0.3);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 40px #22d3ee, 0 0 80px rgba(6, 182, 212, 0.8), 0 0 120px rgba(6, 182, 212, 0.4);
+            }
+        }
+        
+        /* Status Bars on Torso - Horizontal colored bars */
+        .status-bars {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .status-bar {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .status-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            animation: barPulse 2s infinite ease-in-out;
+        }
+        
+        .bar-1 {
+            width: 100px;
+        }
+        
+        .bar-1 .status-bar-fill {
+            background: linear-gradient(90deg, #06b6d4, #22d3ee);
+            width: 100%;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+        
+        .bar-2 {
+            width: 85px;
+        }
+        
+        .bar-2 .status-bar-fill {
+            background: linear-gradient(90deg, #6366f1, #818cf8);
+            width: 100%;
+            animation-delay: 0.3s;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+        
+        .bar-3 {
+            width: 70px;
+        }
+        
+        .bar-3 .status-bar-fill {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            width: 100%;
+            animation-delay: 0.6s;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        
+        @keyframes barPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        /* AI Arms - Rounded smooth arms */
+        .ai-arms {
+            position: absolute;
+            top: 30px;
+            width: 220px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        
+        .ai-arm {
+            width: 28px;
+            height: 100px;
+            background: linear-gradient(180deg, #2d3a4f 0%, #1e293b 50%, #172033 100%);
+            border-radius: 14px;
+            position: relative;
+            box-shadow: 
+                0 5px 20px rgba(0, 0, 0, 0.4),
+                inset 0 2px 5px rgba(255, 255, 255, 0.05);
+        }
+        
+        .arm-left {
+            transform: rotate(20deg) translateX(-10px);
+            transform-origin: top center;
+            animation: armSwingLeft 4s ease-in-out infinite;
+        }
+        
+        .arm-right {
+            transform: rotate(-20deg) translateX(10px);
+            transform-origin: top center;
+            animation: armSwingRight 4s ease-in-out infinite;
+        }
+        
+        @keyframes armSwingLeft {
+            0%, 100% { transform: rotate(20deg) translateX(-10px); }
+            50% { transform: rotate(15deg) translateX(-10px); }
+        }
+        
+        @keyframes armSwingRight {
+            0%, 100% { transform: rotate(-20deg) translateX(10px); }
+            50% { transform: rotate(-15deg) translateX(10px); }
+        }
+        
+        /* AI Hands - Circular with glow */
+        .ai-hand {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(180deg, #2d3a4f, #1e293b);
+            border-radius: 50%;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.4),
+                inset 0 2px 5px rgba(255, 255, 255, 0.05),
+                0 0 15px rgba(6, 182, 212, 0.2);
+        }
+        
+        /* AI Info Section */
+        .ai-info {
+            text-align: center;
+            margin-top: 60px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .ai-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #06b6d4, #6366f1, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(99, 102, 241, 0.5);
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .ai-tagline {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+        
+        .ai-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 30px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .status-dot-large {
+            width: 12px;
+            height: 12px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px #10b981;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+        
+        .status-text {
+            color: #10b981;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+        }
+        
+        /* Right Panel - Chat Interface */
+        .chat-panel {
+            width: 55%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Chat Card */
+        .chat-card {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 100px rgba(99, 102, 241, 0.1);
+        }
+        
+        /* Chat Header */
+        .chat-header {
+            padding: 25px 30px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.1));
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .chat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .chat-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .chat-subtitle {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 2px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .header-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: #6366f1;
+        }
+        
+        /* Chat History */
+        .chat-history {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .chat-history::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-history::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .chat-history::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #6366f1, #8b5cf6);
+            border-radius: 10px;
+        }
+        
+        /* Messages */
+        .message {
+            max-width: 80%;
+            padding: 16px 20px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            animation: messageSlide 0.4s ease-out;
+        }
+        
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .bot-message {
+            background: rgba(30, 41, 59, 0.8);
+            color: rgba(255, 255, 255, 0.9);
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        /* Search result links */
+        .bot-message a {
+            color: #06b6d4;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .bot-message a:hover {
+            color: #22d3ee;
+            text-decoration: underline;
+        }
+        
+        /* Loading dots animation */
+        .loading-dots::after {
+            content: '';
+            animation: loadingDots 1.5s infinite;
+        }
+        
+        @keyframes loadingDots {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+        }
+        
+        /* Input Area */
+        .input-area {
+            padding: 20px 25px 25px;
+            border-top: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 12px;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 20px;
+            padding: 8px;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .input-container:focus-within {
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
+        }
+        
+        .input-container input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            padding: 14px 18px;
+            outline: none;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .input-container input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .input-container button {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        #sendBtn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        #sendBtn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+        }
+        
+        .voice-btn {
+            background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+            color: white !important;
+            box-shadow: 0 5px 20px rgba(6, 182, 212, 0.4);
+        }
+        
+        .voice-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.5);
+        }
+        
+        .voice-btn.listening {
+            animation: voicePulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes voicePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.6); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(6, 182, 212, 0); }
+        }
+        
+        /* Quick Commands */
+        .quick-commands {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .quick-cmd {
+            padding: 10px 18px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .quick-cmd:hover {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: rgba(99, 102, 241, 0.5);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Features Panel */
+        .features-panel {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .feature-box {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 16px;
+            padding: 18px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        .feature-box:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .feature-box:active {
+            transform: translateY(0) scale(0.95);
+            background: rgba(99, 102, 241, 0.25);
+        }
+        
+        .feature-box i {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #06b6d4, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-box:hover i {
+            transform: scale(1.15);
+        }
+        
+        .feature-box span {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            display: block;
+            transition: color 0.3s ease;
+        }
+        
+        .feature-box:hover span {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .avatar-panel {
+                width: 100%;
+                padding: 30px 20px;
+            }
+            
+            .chat-panel {
+                width: 100%;
+            }
+            
+            .ai-avatar-container {
+                transform: scale(0.8);
+            }
+            
+            .ai-info {
+                margin-top: 30px;
+            }
+            
+            .ai-name {
+                font-size: 2.2rem;
+            }
+            
+            .features-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .chat-panel {
+                padding: 15px;
+            }
+            
+            .features-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .quick-commands {
+                justify-content: center;
+            }
+            
+            .ai-name {
+                font-size: 1.8rem;
+                letter-spacing: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="stars" id="stars"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    
+    <div class="main-container">
+        <!-- Left Panel - AI Avatar -->
+        <div class="avatar-panel">
+            <div class="ai-avatar-container">
+                <!-- Hologram Rings -->
+                <div class="hologram-ring ring-1"></div>
+                <div class="hologram-ring ring-2"></div>
+                <div class="hologram-ring ring-3"></div>
+                
+                <!-- AI Robot Body -->
+                <div class="ai-body">
+                    <!-- Head -->
+                    <div class="ai-head">
+                        <div class="ai-face">
+                            <div class="ai-eye"></div>
+                            <div class="ai-eye"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Neck -->
+                    <div class="ai-neck"></div>
+                    
+                    <!-- Torso -->
+                    <div class="ai-torso">
+                        <!-- Arms positioned outside torso flow -->
+                        <div class="ai-arms">
+                            <div class="ai-arm arm-left">
+                                <div class="ai-hand"></div>
+                            </div>
+                            <div class="ai-arm arm-right">
+                                <div class="ai-hand"></div>
+                            </div>
+                        </div>
+                        <div class="chest-core">
+                            <div class="core-inner"></div>
+                        </div>
+                        <div class="status-bars">
+                            <div class="status-bar bar-1"><div class="status-bar-fill"></div></div>
+                            <div class="status-bar bar-2"><div class="status-bar-fill"></div></div>
+                            <div class="status-bar bar-3"><div class="status-bar-fill"></div></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Holographic Platform -->
+                <div class="hologram-platform"></div>
+            </div>
+            
+            <!-- AI Info -->
+            <div class="ai-info">
+                <h1 class="ai-name">NOVA</h1>
+                <p class="ai-tagline">Neural Operated Virtual Assistant</p>
+                <div class="ai-status">
+                    <div class="status-dot-large"></div>
+                    <span class="status-text">SYSTEM ONLINE</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel - Chat Interface -->
+        <div class="chat-panel">
+            <div class="chat-card">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="chat-header-left">
+                        <div class="chat-icon">
+                            <i class="fas fa-message"></i>
+                        </div>
+                        <div>
+                            <div class="chat-title">Command Center</div>
+                            <div class="chat-subtitle">Voice & Text Interface</div>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <div class="header-btn">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="header-btn">
+                            <i class="fas fa-expand"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat History -->
+                <div class="chat-history" id="chatHistory">
+                    <div class="message bot-message">
+                        👋 Hello! I'm NOVA, your advanced AI assistant. How can I help you today?
+                    </div>
+                    <div class="message bot-message">
+                        I can help you with:<br>
+                        🌐 Open websites and search for anything<br>
+                        🔍 Search the internet - try "What is AI?" or "Tell me about Mars"<br>
+                        📚 Get instant answers from Wikipedia<br>
+                        🧮 Perform calculations<br>
+                        🎤 Respond to voice commands
+                    </div>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-container">
+                        <input type="text" id="userInput" placeholder="Ask me anything... e.g., What is quantum computing?">
+                        <button id="sendBtn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        <button id="voiceBtn" class="voice-btn">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Quick Commands -->
+                    <div class="quick-commands" id="commandHistory">
+                        <div class="quick-cmd">What is artificial intelligence?</div>
+                        <div class="quick-cmd">Tell me about Elon Musk</div>
+                        <div class="quick-cmd">Open YouTube</div>
+                    </div>
+                    
+                    <!-- Features Panel -->
+                    <div class="features-panel">
+                        <div class="feature-box" id="featureVoice" title="Click to start voice input">
+                            <i class="fas fa-microphone-alt"></i>
+                            <span>Voice</span>
+                        </div>
+                        <div class="feature-box" id="featureSearch" title="Click to search the internet">
+                            <i class="fas fa-search"></i>
+                            <span>Search</span>
+                        </div>
+                        <div class="feature-box" id="featureBrowse" title="Click to browse websites">
+                            <i class="fas fa-globe"></i>
+                            <span>Browse</span>
+                        </div>
+                        <div class="feature-box" id="featureCalculate" title="Click to use calculator">
+                            <i class="fas fa-calculator"></i>
+                            <span>Calculate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatHistory = document.getElementById('chatHistory');
+            const userInput = document.getElementById('userInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const voiceBtn = document.getElementById('voiceBtn');
+            const commandHistory = document.getElementById('commandHistory');
+            
+            // Generate animated stars background
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                starsContainer.appendChild(star);
+            }
+            
+            // Initialize speech recognition
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            let recognition = null;
+            let isListening = false;
+            
+            if (SpeechRecognition) {
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    userInput.value = transcript;
+                    processCommand(transcript);
+                    voiceBtn.classList.remove('listening');
+                    isListening = false;
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    addMessage("Sorry, I couldn't understand that. Please try again.", false);
+                    voiceBtn.classList.remove('listening');
+                    isListening = false;
+                };
+                
+                recognition.onend = function() {
+                    if (isListening) {
+                        recognition.start();
+                    }
+                };
+            } else {
+                addMessage("Your browser doesn't support speech recognition. Please use Chrome or Edge.", false);
+                voiceBtn.style.display = 'none';
+            }
+            
+            // Function to add message to chat
+            function addMessage(message, isUser = false, isHTML = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+                if (isHTML) {
+                    messageDiv.innerHTML = message;
+                } else {
+                    messageDiv.textContent = message;
+                }
+                chatHistory.appendChild(messageDiv);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }
+            
+            // Function to search Wikipedia and show results
+            async function searchWikipedia(query) {
+                try {
+                    addMessage(`🔍 Searching for "${query}"...`);
+                    
+                    // Wikipedia API search
+                    const searchUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+                    const response = await fetch(searchUrl);
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (data.extract) {
+                            const result = `
+                                <strong>📚 ${data.title}</strong><br><br>
+                                ${data.extract}<br><br>
+                                <a href="${data.content_urls?.desktop?.page || '#'}" target="_blank" style="color: #06b6d4; text-decoration: none;">🔗 Read more on Wikipedia</a>
+                            `;
+                            addMessage(result, false, true);
+                            speak(data.extract.substring(0, 300));
+                        } else {
+                            // Try search API if direct page not found
+                            await searchWikipediaFallback(query);
+                        }
+                    } else {
+                        // Fallback to search API
+                        await searchWikipediaFallback(query);
+                    }
+                } catch (error) {
+                    console.error('Wikipedia search error:', error);
+                    addMessage(`I couldn't find information about "${query}". Would you like me to search on Google instead?`);
+                }
+            }
+            
+            // Fallback Wikipedia search
+            async function searchWikipediaFallback(query) {
+                try {
+                    const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=3`;
+                    const response = await fetch(searchUrl);
+                    const data = await response.json();
+                    
+                    if (data.query?.search?.length > 0) {
+                        let resultsHTML = `<strong>🔍 Search Results for "${query}":</strong><br><br>`;
+                        
+                        for (const item of data.query.search) {
+                            const snippet = item.snippet.replace(/<[^>]*>/g, '');
+                            resultsHTML += `
+                                <div style="margin-bottom: 15px; padding: 10px; background: rgba(6, 182, 212, 0.1); border-radius: 10px;">
+                                    <strong style="color: #06b6d4;">📄 ${item.title}</strong><br>
+                                    <span style="opacity: 0.9;">${snippet}...</span><br>
+                                    <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(item.title)}" target="_blank" style="color: #818cf8; text-decoration: none; font-size: 0.85rem;">Read more →</a>
+                                </div>
+                            `;
+                        }
+                        
+                        addMessage(resultsHTML, false, true);
+                        speak(`I found ${data.query.search.length} results for ${query}. ${data.query.search[0].title}`);
+                    } else {
+                        addMessage(`I couldn't find any information about "${query}". Try a different search term.`);
+                    }
+                } catch (error) {
+                    addMessage(`Search failed. Please try again.`);
+                }
+            }
+            
+            // Function to search DuckDuckGo Instant Answers
+            async function searchDuckDuckGo(query) {
+                try {
+                    addMessage(`🔍 Searching the internet for "${query}"...`);
+                    
+                    const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    
+                    if (data.Abstract) {
+                        const result = `
+                            <strong>📖 ${data.Heading || query}</strong><br><br>
+                            ${data.Abstract}<br><br>
+                            ${data.AbstractURL ? `<a href="${data.AbstractURL}" target="_blank" style="color: #06b6d4; text-decoration: none;">🔗 Learn more</a>` : ''}
+                        `;
+                        addMessage(result, false, true);
+                        speak(data.Abstract.substring(0, 300));
+                    } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+                        let resultsHTML = `<strong>🔍 Related topics for "${query}":</strong><br><br>`;
+                        
+                        const topics = data.RelatedTopics.slice(0, 4);
+                        for (const topic of topics) {
+                            if (topic.Text) {
+                                resultsHTML += `
+                                    <div style="margin-bottom: 10px; padding: 8px; background: rgba(99, 102, 241, 0.1); border-radius: 8px;">
+                                        ${topic.Text}
+                                        ${topic.FirstURL ? `<br><a href="${topic.FirstURL}" target="_blank" style="color: #818cf8; text-decoration: none; font-size: 0.85rem;">Learn more →</a>` : ''}
+                                    </div>
+                                `;
+                            }
+                        }
+                        
+                        addMessage(resultsHTML, false, true);
+                    } else {
+                        // Fallback to Wikipedia if DuckDuckGo has no results
+                        await searchWikipedia(query);
+                    }
+                } catch (error) {
+                    // Fallback to Wikipedia
+                    await searchWikipedia(query);
+                }
+            }
+            
+            // Function to speak text using text-to-speech
+            function speak(text) {
+                if ('speechSynthesis' in window) {
+                    // Cancel any ongoing speech
+                    window.speechSynthesis.cancel();
+                    
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = 1;
+                    utterance.pitch = 1;
+                    utterance.volume = 1;
+                    utterance.lang = 'en-US';
+                    
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+            
+            // Function to add command to history
+            function addCommandToHistory(command) {
+                const chip = document.createElement('div');
+                chip.classList.add('quick-cmd');
+                chip.textContent = command;
+                chip.addEventListener('click', () => {
+                    userInput.value = command;
+                    processCommand(command);
+                });
+                commandHistory.appendChild(chip);
+            }
+            
+            // Function to process user commands
+            function processCommand(command) {
+                // Convert to lowercase for easier processing
+                const cmd = command.toLowerCase();
+                
+                // Add user message to chat
+                addMessage(command, true);
+                
+                // Add command to history
+                addCommandToHistory(command);
+                
+                // Clear input
+                userInput.value = '';
+                
+                // Simulate thinking
+                setTimeout(() => {
+                    // Combined commands (open and search) - handles "open youtube and search for xyz"
+                    // This check must come BEFORE the simple "open" check
+                    if (cmd.includes('open') && (cmd.includes('search') || cmd.includes('find') || cmd.includes('look for'))) {
+                        let platform = '';
+                        let platformUrl = '';
+                        let query = '';
+                        
+                        // Extract search query - look for text after "search for", "search", "find", "look for"
+                        const searchPatterns = ['search for', 'and search', 'find', 'look for'];
+                        for (const pattern of searchPatterns) {
+                            if (cmd.includes(pattern)) {
+                                const parts = cmd.split(pattern);
+                                if (parts.length > 1) {
+                                    query = parts[1].trim();
+                                    // Remove trailing words like "on youtube" if they exist
+                                    query = query.replace(/\s+on\s+(youtube|google|wikipedia|amazon|github|twitter|reddit|facebook|instagram|netflix|bing)$/i, '').trim();
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Detect platform from command
+                        if (cmd.includes('youtube')) {
+                            platform = 'YouTube';
+                            platformUrl = 'https://www.youtube.com/results?search_query=';
+                        }
+                        else if (cmd.includes('google')) {
+                            platform = 'Google';
+                            platformUrl = 'https://www.google.com/search?q=';
+                        }
+                        else if (cmd.includes('wikipedia')) {
+                            platform = 'Wikipedia';
+                            platformUrl = 'https://en.wikipedia.org/wiki/Special:Search?search=';
+                        }
+                        else if (cmd.includes('amazon')) {
+                            platform = 'Amazon';
+                            platformUrl = 'https://www.amazon.com/s?k=';
+                        }
+                        else if (cmd.includes('github')) {
+                            platform = 'GitHub';
+                            platformUrl = 'https://github.com/search?q=';
+                        }
+                        else if (cmd.includes('twitter') || cmd.includes('x.com')) {
+                            platform = 'Twitter/X';
+                            platformUrl = 'https://twitter.com/search?q=';
+                        }
+                        else if (cmd.includes('reddit')) {
+                            platform = 'Reddit';
+                            platformUrl = 'https://www.reddit.com/search/?q=';
+                        }
+                        else if (cmd.includes('facebook')) {
+                            platform = 'Facebook';
+                            platformUrl = 'https://www.facebook.com/search/top?q=';
+                        }
+                        else if (cmd.includes('instagram')) {
+                            platform = 'Instagram';
+                            platformUrl = 'https://www.instagram.com/explore/tags/';
+                        }
+                        else if (cmd.includes('bing')) {
+                            platform = 'Bing';
+                            platformUrl = 'https://www.bing.com/search?q=';
+                        }
+                        else if (cmd.includes('linkedin')) {
+                            platform = 'LinkedIn';
+                            platformUrl = 'https://www.linkedin.com/search/results/all/?keywords=';
+                        }
+                        else if (cmd.includes('spotify')) {
+                            platform = 'Spotify';
+                            platformUrl = 'https://open.spotify.com/search/';
+                        }
+                        else if (cmd.includes('pinterest')) {
+                            platform = 'Pinterest';
+                            platformUrl = 'https://www.pinterest.com/search/pins/?q=';
+                        }
+                        else if (cmd.includes('ebay')) {
+                            platform = 'eBay';
+                            platformUrl = 'https://www.ebay.com/sch/i.html?_nkw=';
+                        }
+                        else if (cmd.includes('stack overflow') || cmd.includes('stackoverflow')) {
+                            platform = 'Stack Overflow';
+                            platformUrl = 'https://stackoverflow.com/search?q=';
+                        }
+                        else if (cmd.includes('twitch')) {
+                            platform = 'Twitch';
+                            platformUrl = 'https://www.twitch.tv/search?term=';
+                        }
+                        else if (cmd.includes('tiktok')) {
+                            platform = 'TikTok';
+                            platformUrl = 'https://www.tiktok.com/search?q=';
+                        }
+                        else if (cmd.includes('chatgpt') || cmd.includes('chat gpt') || cmd.includes('openai')) {
+                            platform = 'ChatGPT';
+                            platformUrl = 'https://chat.openai.com/?q=';
+                        }
+                        
+                        if (platform && query) {
+                            addMessage(`Opening ${platform} and searching for "${query}"...`);
+                            speak(`Opening ${platform} and searching for ${query}`);
+                            setTimeout(() => {
+                                addMessage(`Here are the ${platform} search results for "${query}".`);
+                                window.open(platformUrl + encodeURIComponent(query), '_blank');
+                            }, 1500);
+                        } else if (platform && !query) {
+                            addMessage(`What would you like me to search for on ${platform}?`, false);
+                            speak(`What would you like me to search for on ${platform}?`);
+                        } else {
+                            addMessage("I'm not sure what you want me to search. Try something like 'Open YouTube and search for cat videos'", false);
+                            speak("I'm not sure what you want me to search. Try saying open YouTube and search for something.");
+                        }
+                    }
+                    // Check for simple open commands (just open without search)
+                    else if (cmd.includes('open')) {
+                        let url = '';
+                        let siteName = '';
+                        
+                        if (cmd.includes('youtube')) {
+                            url = 'https://www.youtube.com';
+                            siteName = 'YouTube';
+                        } 
+                        else if (cmd.includes('google')) {
+                            url = 'https://www.google.com';
+                            siteName = 'Google';
+                        }
+                        else if (cmd.includes('wikipedia')) {
+                            url = 'https://www.wikipedia.org';
+                            siteName = 'Wikipedia';
+                        }
+                        else if (cmd.includes('github')) {
+                            url = 'https://www.github.com';
+                            siteName = 'GitHub';
+                        }
+                        else if (cmd.includes('amazon')) {
+                            url = 'https://www.amazon.com';
+                            siteName = 'Amazon';
+                        }
+                        else if (cmd.includes('twitter') || cmd.includes('x.com')) {
+                            url = 'https://twitter.com';
+                            siteName = 'Twitter/X';
+                        }
+                        else if (cmd.includes('netflix')) {
+                            url = 'https://www.netflix.com';
+                            siteName = 'Netflix';
+                        }
+                        else if (cmd.includes('facebook')) {
+                            url = 'https://www.facebook.com';
+                            siteName = 'Facebook';
+                        }
+                        else if (cmd.includes('instagram')) {
+                            url = 'https://www.instagram.com';
+                            siteName = 'Instagram';
+                        }
+                        else if (cmd.includes('reddit')) {
+                            url = 'https://www.reddit.com';
+                            siteName = 'Reddit';
+                        }
+                        else if (cmd.includes('linkedin')) {
+                            url = 'https://www.linkedin.com';
+                            siteName = 'LinkedIn';
+                        }
+                        else if (cmd.includes('spotify')) {
+                            url = 'https://open.spotify.com';
+                            siteName = 'Spotify';
+                        }
+                        else if (cmd.includes('pinterest')) {
+                            url = 'https://www.pinterest.com';
+                            siteName = 'Pinterest';
+                        }
+                        else if (cmd.includes('ebay')) {
+                            url = 'https://www.ebay.com';
+                            siteName = 'eBay';
+                        }
+                        else if (cmd.includes('bing')) {
+                            url = 'https://www.bing.com';
+                            siteName = 'Bing';
+                        }
+                        else if (cmd.includes('stack overflow') || cmd.includes('stackoverflow')) {
+                            url = 'https://stackoverflow.com';
+                            siteName = 'Stack Overflow';
+                        }
+                        else if (cmd.includes('twitch')) {
+                            url = 'https://www.twitch.tv';
+                            siteName = 'Twitch';
+                        }
+                        else if (cmd.includes('tiktok')) {
+                            url = 'https://www.tiktok.com';
+                            siteName = 'TikTok';
+                        }
+                        else if (cmd.includes('discord')) {
+                            url = 'https://discord.com';
+                            siteName = 'Discord';
+                        }
+                        else if (cmd.includes('whatsapp')) {
+                            url = 'https://web.whatsapp.com';
+                            siteName = 'WhatsApp';
+                        }
+                        else if (cmd.includes('gmail')) {
+                            url = 'https://mail.google.com';
+                            siteName = 'Gmail';
+                        }
+                        else if (cmd.includes('chatgpt')) {
+                            url = 'https://chat.openai.com';
+                            siteName = 'ChatGPT';
+                        }
+                        
+                        if (url) {
+                            addMessage(`Opening ${siteName}...`);
+                            speak(`Opening ${siteName}`);
+                            setTimeout(() => {
+                                addMessage(`${siteName} has been opened in a new tab.`);
+                                window.open(url, '_blank');
+                            }, 1000);
+                        } else {
+                            addMessage('Which website would you like me to open? I can open YouTube, Google, Wikipedia, etc.', false);
+                            speak('Which website would you like me to open?');
+                        }
+                    }
+                    // Check for search commands
+                    else if (cmd.includes('search') || cmd.includes('find') || cmd.includes('look for')) {
+                        // Extract search query and platform
+                        let query = '';
+                        let platform = 'Google';
+                        let platformUrl = 'https://www.google.com/search?q=';
+                        
+                        if (cmd.includes('on youtube')) {
+                            platform = 'YouTube';
+                            platformUrl = 'https://www.youtube.com/results?search_query=';
+                            query = cmd.split('on youtube')[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else if (cmd.includes('on google')) {
+                            platform = 'Google';
+                            platformUrl = 'https://www.google.com/search?q=';
+                            query = cmd.split('on google')[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else if (cmd.includes('on wikipedia')) {
+                            platform = 'Wikipedia';
+                            platformUrl = 'https://en.wikipedia.org/wiki/Special:Search?search=';
+                            query = cmd.split('on wikipedia')[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else if (cmd.includes('on amazon')) {
+                            platform = 'Amazon';
+                            platformUrl = 'https://www.amazon.com/s?k=';
+                            query = cmd.split('on amazon')[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else if (cmd.includes('on github')) {
+                            platform = 'GitHub';
+                            platformUrl = 'https://github.com/search?q=';
+                            query = cmd.split('on github')[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else if (cmd.includes('on reddit')) {
+                            platform = 'Reddit';
+                            platformUrl = 'https://www.reddit.com/search/?q=';
+                            query = cmd.split('on reddit')[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else if (cmd.includes('on twitter') || cmd.includes('on x')) {
+                            platform = 'Twitter/X';
+                            platformUrl = 'https://twitter.com/search?q=';
+                            query = cmd.split(/on (twitter|x)/)[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else if (cmd.includes('on bing')) {
+                            platform = 'Bing';
+                            platformUrl = 'https://www.bing.com/search?q=';
+                            query = cmd.split('on bing')[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else if (cmd.includes('on spotify')) {
+                            platform = 'Spotify';
+                            platformUrl = 'https://open.spotify.com/search/';
+                            query = cmd.split('on spotify')[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else if (cmd.includes('on linkedin')) {
+                            platform = 'LinkedIn';
+                            platformUrl = 'https://www.linkedin.com/search/results/all/?keywords=';
+                            query = cmd.split('on linkedin')[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else if (cmd.includes('on ebay')) {
+                            platform = 'eBay';
+                            platformUrl = 'https://www.ebay.com/sch/i.html?_nkw=';
+                            query = cmd.split('on ebay')[0].replace('search for', '').replace('search', '').trim();
+                        }
+                        else {
+                            // Default to Google search
+                            query = cmd.replace('search for', '').replace('search', '').replace('find', '').replace('look for', '').trim();
+                        }
+                        
+                        if (query) {
+                            addMessage(`Searching for "${query}" on ${platform}...`);
+                            speak(`Searching for ${query} on ${platform}`);
+                            setTimeout(() => {
+                                addMessage(`Here are the ${platform} search results for "${query}".`);
+                                window.open(platformUrl + encodeURIComponent(query), '_blank');
+                            }, 1500);
+                        } else {
+                            addMessage('What would you like me to search for?', false);
+                            speak('What would you like me to search for?');
+                        }
+                    }
+                    // Check for calculations
+                    else if (cmd.includes('calculate') || cmd.includes('calc ') || 
+                             ((cmd.includes('+') || cmd.includes('-') || cmd.includes('*') || cmd.includes('/') || 
+                               cmd.includes('plus') || cmd.includes('minus') || cmd.includes('times') || 
+                               cmd.includes('into') || cmd.includes('divided')) && /\d/.test(cmd))) {
+                        try {
+                            // Extract the math expression
+                            let expression = cmd;
+                            
+                            // Remove common prefixes
+                            expression = expression
+                                .replace(/^.*?calculate\s*/i, '')
+                                .replace(/^.*?calc\s*/i, '')
+                                .replace(/^.*?what is\s*/i, '')
+                                .replace(/^.*?solve\s*/i, '')
+                                .replace(/^hello.*?\s+/i, '')
+                                .replace(/^hi.*?\s+/i, '')
+                                .replace(/^nova\s*/i, '');
+                            
+                            // Remove trailing words like "= answer", "give", "please", etc.
+                            expression = expression
+                                .replace(/\s*=.*$/i, '')
+                                .replace(/\s*answer.*$/i, '')
+                                .replace(/\s*give.*$/i, '')
+                                .replace(/\s*please.*$/i, '')
+                                .replace(/\s*result.*$/i, '')
+                                .replace(/\?.*$/i, '');
+                            
+                            // Replace words with operators
+                            expression = expression
+                                .replace(/\s+plus\s+/gi, '+')
+                                .replace(/\s+minus\s+/gi, '-')
+                                .replace(/\s+times\s+/gi, '*')
+                                .replace(/\s+into\s+/gi, '*')
+                                .replace(/\s+x\s+/gi, '*')
+                                .replace(/\s+multiplied\s+by\s+/gi, '*')
+                                .replace(/\s+divided\s+by\s+/gi, '/')
+                                .replace(/\s+by\s+/gi, '/')
+                                .replace(/\s+over\s+/gi, '/')
+                                .replace(/\s+mod\s+/gi, '%')
+                                .replace(/\s+power\s+/gi, '**')
+                                .replace(/\s+to\s+the\s+power\s+of\s+/gi, '**');
+                            
+                            // Clean up spaces around operators and keep only valid math characters
+                            expression = expression.replace(/\s+/g, '');
+                            
+                            // Validate: only allow numbers, operators, parentheses, and decimal points
+                            if (!/^[\d+\-*/().%\s]+$/.test(expression)) {
+                                throw new Error('Invalid expression');
+                            }
+                            
+                            // Evaluate the expression safely
+                            const result = Function('"use strict"; return (' + expression + ')')();
+                            
+                            // Format the result
+                            const formattedResult = Number.isInteger(result) ? result : result.toFixed(4).replace(/\.?0+$/, '');
+                            
+                            addMessage(`🧮 ${expression} = ${formattedResult}`);
+                            speak(`The answer is ${formattedResult}`);
+                        } catch (e) {
+                            addMessage("I couldn't calculate that. Try something like 'calculate 2 + 3 * 4' or '10 divided by 2'", false);
+                        }
+                    }
+                    // Internet search - "what is", "who is", "tell me about", "explain", "define"
+                    else if (cmd.startsWith('what is ') || cmd.startsWith('who is ') || cmd.startsWith('tell me about ') || 
+                             cmd.startsWith('explain ') || cmd.startsWith('define ') || cmd.startsWith('what are ') ||
+                             cmd.startsWith('how does ') || cmd.startsWith('how do ') || cmd.startsWith('why is ') ||
+                             cmd.startsWith('why do ') || cmd.startsWith('when was ') || cmd.startsWith('where is ')) {
+                        let query = cmd
+                            .replace(/^what is /i, '')
+                            .replace(/^what are /i, '')
+                            .replace(/^who is /i, '')
+                            .replace(/^tell me about /i, '')
+                            .replace(/^explain /i, '')
+                            .replace(/^define /i, '')
+                            .replace(/^how does /i, '')
+                            .replace(/^how do /i, '')
+                            .replace(/^why is /i, '')
+                            .replace(/^why do /i, '')
+                            .replace(/^when was /i, '')
+                            .replace(/^where is /i, '')
+                            .replace(/\?$/, '')
+                            .trim();
+                        
+                        if (query) {
+                            searchDuckDuckGo(query);
+                        } else {
+                            addMessage('What would you like me to look up?', false);
+                        }
+                        return; // Exit early since search is async
+                    }
+                    // Check for jokes
+                    else if (cmd.includes('joke') || cmd.includes('funny')) {
+                        const jokes = [
+                            "Why don't scientists trust atoms? Because they make up everything!",
+                            "What did one ocean say to the other ocean? Nothing, they just waved!",
+                            "Why did the scarecrow win an award? Because he was outstanding in his field!",
+                            "What do you call a fake noodle? An impasta!",
+                            "Why couldn't the bicycle stand up by itself? It was two tired!",
+                            "What do you call a bear with no teeth? A gummy bear!",
+                            "Why did the tomato turn red? Because it saw the salad dressing!",
+                            "What do you get when you cross a snowman and a vampire? Frostbite!"
+                        ];
+                        const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+                        addMessage(randomJoke);
+                    }
+                    // Check for greetings
+                    else if (cmd.includes('hello') || cmd.includes('hi') || cmd.includes('hey')) {
+                        addMessage('Hello there! How can I assist you today?');
+                    }
+                    // Check for time
+                    else if (cmd.includes('time')) {
+                        const now = new Date();
+                        const time = now.toLocaleTimeString();
+                        addMessage(`The current time is ${time}`);
+                    }
+                    // Check for date
+                    else if (cmd.includes('date') || cmd.includes('today')) {
+                        const now = new Date();
+                        const date = now.toLocaleDateString();
+                        addMessage(`Today's date is ${date}`);
+                    }
+                    // Check for weather
+                    else if (cmd.includes('weather')) {
+                        const locations = ['New York', 'London', 'Tokyo', 'Paris', 'Sydney'];
+                        const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+                        const temperatures = [72, 65, 80, 68, 75];
+                        const randomTemp = temperatures[Math.floor(Math.random() * temperatures.length)];
+                        const conditions = ['sunny', 'cloudy', 'rainy', 'partly cloudy'];
+                        const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
+                        
+                        addMessage(`The weather in ${randomLocation} is ${randomCondition} with a temperature of ${randomTemp}°F.`);
+                    }
+                    // Default response
+                    else {
+                        const responses = [
+                            "I'm processing your request...",
+                            "Executing your command now...",
+                            "I'm working on that for you...",
+                            "Performing the requested action..."
+                        ];
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        addMessage(randomResponse);
+                        
+                        // Simulate action completion
+                        setTimeout(() => {
+                            addMessage("I've completed the task you requested. Is there anything else I can help with?", false);
+                        }, 2000);
+                    }
+                }, 800);
+            }
+            
+            // Event listener for send button
+            sendBtn.addEventListener('click', function() {
+                const command = userInput.value.trim();
+                if (command) {
+                    processCommand(command);
+                }
+            });
+            
+            // Event listener for Enter key
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const command = userInput.value.trim();
+                    if (command) {
+                        processCommand(command);
+                    }
+                }
+            });
+            
+            // Voice command functionality
+            voiceBtn.addEventListener('click', function() {
+                if (!recognition) {
+                    addMessage("Speech recognition not supported in your browser.", false);
+                    return;
+                }
+                
+                if (isListening) {
+                    recognition.stop();
+                    voiceBtn.classList.remove('listening');
+                    isListening = false;
+                    addMessage("Stopped listening", false);
+                } else {
+                    recognition.start();
+                    voiceBtn.classList.add('listening');
+                    isListening = true;
+                    addMessage("Listening... Speak now", false);
+                }
+            });
+            
+            // Add click handlers to initial quick commands
+            document.querySelectorAll('.quick-cmd').forEach(cmd => {
+                cmd.addEventListener('click', () => {
+                    userInput.value = cmd.textContent;
+                    processCommand(cmd.textContent);
+                });
+            });
+            
+            // Feature button: Voice - Start voice recognition
+            document.getElementById('featureVoice').addEventListener('click', function() {
+                if (!recognition) {
+                    addMessage("Speech recognition not supported in your browser. Please use Chrome or Edge.", false);
+                    return;
+                }
+                
+                if (!isListening) {
+                    recognition.start();
+                    voiceBtn.classList.add('listening');
+                    isListening = true;
+                    addMessage("🎤 Listening... Speak your command now!", false);
+                    speak("I'm listening. Go ahead!");
+                } else {
+                    recognition.stop();
+                    voiceBtn.classList.remove('listening');
+                    isListening = false;
+                    addMessage("Stopped listening", false);
+                }
+            });
+            
+            // Feature button: Search - Show search prompt
+            document.getElementById('featureSearch').addEventListener('click', function() {
+                const query = prompt("🔍 What would you like to search for?");
+                if (query && query.trim()) {
+                    processCommand("What is " + query.trim());
+                }
+            });
+            
+            // Feature button: Browse - Show website options
+            document.getElementById('featureBrowse').addEventListener('click', function() {
+                const websites = [
+                    "YouTube", "Google", "Wikipedia", "Amazon", "GitHub",
+                    "Twitter", "Reddit", "Netflix", "Spotify", "ChatGPT"
+                ];
+                
+                const choice = prompt(
+                    "🌐 Which website would you like to open?\n\n" +
+                    "Options: " + websites.join(", ") + "\n\n" +
+                    "Type the website name:"
+                );
+                
+                if (choice && choice.trim()) {
+                    processCommand("Open " + choice.trim());
+                }
+            });
+            
+            // Feature button: Calculate - Show calculator prompt
+            document.getElementById('featureCalculate').addEventListener('click', function() {
+                const expression = prompt(
+                    "🧮 Enter a math expression:\n\n" +
+                    "Examples:\n" +
+                    "• 25 + 17 * 3\n" +
+                    "• 100 / 4 - 10\n" +
+                    "• (50 + 30) * 2"
+                );
+                
+                if (expression && expression.trim()) {
+                    processCommand("Calculate " + expression.trim());
+                }
+            });
+        });
+    </script>
+</body>
+</html>
